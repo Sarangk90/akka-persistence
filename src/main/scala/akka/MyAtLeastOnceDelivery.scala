@@ -1,11 +1,11 @@
 package akka
 
-import akka.MyPersistenceActor.{Confirm, Msg, _}
+import akka.MyAtLeastOnceDelivery.{Confirm, Msg, _}
 import akka.actor.{Actor, ActorSelection, ActorSystem, Props}
 import akka.persistence.{AtLeastOnceDelivery, PersistentActor, RecoveryCompleted}
 
 
-class MyPersistenceActor(destination: ActorSelection)
+class MyAtLeastOnceDelivery(destination: ActorSelection)
   extends PersistentActor with AtLeastOnceDelivery {
 
   override def persistenceId: String = "persistence-id"
@@ -39,7 +39,7 @@ class MyPersistenceActor(destination: ActorSelection)
   }
 }
 
-object MyPersistenceActor {
+object MyAtLeastOnceDelivery {
 
   case class Msg(deliveryId: Long, s: String)
 
@@ -67,7 +67,7 @@ object Test extends App {
 
   val receiver = system.actorOf(Props[MyDestination], "destination")
   val actorSelection = system.actorSelection("/user/destination")
-  val sender = system.actorOf(Props(classOf[MyPersistenceActor], actorSelection), "ActorWithALOD")
+  val sender = system.actorOf(Props(classOf[MyAtLeastOnceDelivery], actorSelection), "ActorWithALOD")
 
   sender ! "Hello"
 

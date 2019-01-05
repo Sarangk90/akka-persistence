@@ -1,8 +1,8 @@
-package com.packt.akka
+package akka
 
+import akka.Counter.{Cmd, Decrement, Increment}
 import akka.actor.{ActorLogging, ActorSystem, Props}
 import akka.persistence._
-import com.packt.akka.Counter.{Cmd, Decrement, Increment}
 
 object Counter {
 
@@ -59,7 +59,7 @@ class Counter extends PersistentActor with ActorLogging {
   }
 }
 
-object TestCounter extends App {
+object Persistence extends App {
 
   val system = ActorSystem("persistent-actors")
 
