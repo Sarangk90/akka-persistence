@@ -26,9 +26,6 @@ class Counter extends PersistentActor with ActorLogging {
 
   import Counter._
 
-  println("Starting ........................")
-
-  // Persistent Identifier
   override def persistenceId = "counter-example"
 
   var state: State = State(count = 0)
@@ -40,7 +37,6 @@ class Counter extends PersistentActor with ActorLogging {
       state = State(count = state.count - count)
   }
 
-  // Persistent receive on recovery mood
   val receiveRecover: Receive = {
     case evt: Evt =>
       println(s"Counter receive ${evt} on recovering mood")
@@ -59,12 +55,7 @@ class Counter extends PersistentActor with ActorLogging {
 
     case "print" =>
       println(s"The Current state of counter is ${state}")
-
   }
-
-
-  //  override def recovery = Recovery.none
-
 }
 
 
