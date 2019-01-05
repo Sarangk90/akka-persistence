@@ -1,7 +1,8 @@
 package com.packt.akka
 
-import akka.actor.ActorLogging
+import akka.actor.{ActorLogging, ActorSystem, Props}
 import akka.persistence._
+import com.packt.akka.Counter.{Cmd, Decrement, Increment}
 
 object Counter {
 
@@ -39,7 +40,7 @@ class Counter extends PersistentActor with ActorLogging {
 
   val receiveRecover: Receive = {
     case evt: Evt =>
-      println(s"Counter receive ${evt} on recovering mood")
+      println(s"akka.Counter receive ${evt} on recovering mood")
       updateState(evt)
     case RecoveryCompleted =>
       println(s"Recovery Complete and Now I'll swtich to receiving mode :)")
@@ -48,7 +49,7 @@ class Counter extends PersistentActor with ActorLogging {
   // Persistent receive on normal mood
   val receiveCommand: Receive = {
     case cmd@Cmd(op) =>
-      println(s"Counter receive ${cmd}")
+      println(s"akka.Counter receive ${cmd}")
       persist(Evt(op)) { evt =>
         updateState(evt)
       }
@@ -56,6 +57,25 @@ class Counter extends PersistentActor with ActorLogging {
     case "print" =>
       println(s"The Current state of counter is ${state}")
   }
+}
+
+object TestCounter extends App {
+
+  val system = ActorSystem("persistent-actors")
+
+  val counter = system.actorOf(Props[Counter], "counter-system")
+
+  counter ! Cmd(Increment(3))
+
+  counter ! Cmd(Increment(5))
+
+  counter ! Cmd(Decrement(3))
+
+  counter ! "print"
+
+  Thread.sleep(5000)
+  system.terminate()
+
 }
 
 
