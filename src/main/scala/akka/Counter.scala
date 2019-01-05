@@ -40,7 +40,7 @@ class Counter extends PersistentActor with ActorLogging {
 
   val receiveRecover: Receive = {
     case evt: Evt =>
-      println(s"akka.Counter receive ${evt} on recovering mood")
+      println(s"Counter receive ${evt} on recovering mood")
       updateState(evt)
     case RecoveryCompleted =>
       println(s"Recovery Complete and Now I'll swtich to receiving mode :)")

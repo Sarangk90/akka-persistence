@@ -12,7 +12,7 @@ class MyPersistenceActor(destination: ActorSelection)
 
   override def receiveCommand: Receive = {
     case s: String ⇒ {
-      println(s"About to send Msg, ${s}")
+      println(s"Client: Received brand new command with message ${s}")
       persist(MsgSent(s))(updateState)
     }
     case Confirm(deliveryId) ⇒ persist(MsgConfirmed(deliveryId))(updateState)
@@ -20,11 +20,11 @@ class MyPersistenceActor(destination: ActorSelection)
 
   override def receiveRecover: Receive = {
     case evt: Evt ⇒ {
-      println("Recovery is in progress...")
+      println(s"Client: Recovering event ${evt}")
       updateState(evt)
     }
     case RecoveryCompleted => {
-      println("Recovery finished...")
+      println("Client: Recovery completed successfully and now going to address new messages")
     }
   }
 
@@ -33,7 +33,7 @@ class MyPersistenceActor(destination: ActorSelection)
       deliver(destination)(deliveryId ⇒ Msg(deliveryId, s))
 
     case MsgConfirmed(deliveryId) ⇒ {
-      println(s"Got response with Delivery Id .... ${deliveryId}")
+      println(s"Client: Response received with Delivery Id .... ${deliveryId}")
       confirmDelivery(deliveryId)
     }
   }
@@ -56,13 +56,13 @@ object MyPersistenceActor {
 class MyDestination extends Actor {
   def receive = {
     case Msg(deliveryId, s) ⇒
-      println(s"Msg Receivd with Delivery Id .... ${deliveryId}")
+      println(s"Server: Request received with Delivery Id .... ${deliveryId}")
 
       sender() ! Confirm(deliveryId)
   }
 }
 
-object Test extends App{
+object Test extends App {
   val system = ActorSystem("persistent-actors")
 
   val receiver = system.actorOf(Props[MyDestination], "destination")
