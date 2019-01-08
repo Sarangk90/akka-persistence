@@ -10,7 +10,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % akkaVersion,
   "com.typesafe.akka" %% "akka-persistence" % akkaVersion,
   "com.typesafe.akka" %% "akka-persistence-cassandra" % "0.54",
-  "com.typesafe.akka" %% "akka-persistence-query" % "2.5.3"
+  "com.typesafe.akka" %% "akka-persistence-query" % "2.4.17"
 )
 
 
