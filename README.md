@@ -1,2 +1,2 @@
 # akka-persistence
-Demo of Akka-Persistence with Cassandra
+Demo of Akka-Persistence with Cassandra.
